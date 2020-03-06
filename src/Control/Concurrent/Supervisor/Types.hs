@@ -51,6 +51,7 @@ import           Data.Typeable
 import           Control.Monad
 import           Control.Retry
 import           Data.Time
+import           Numeric.Natural
 
 --------------------------------------------------------------------------------
 data Uninitialised
@@ -69,7 +70,7 @@ type SupervisorSpec0 q = Supervisor_ q Uninitialised
 type Supervisor0 q = Supervisor_ q Initialised
 
 class QueueLike q where
-  newQueueIO :: Int -> IO (q a)
+  newQueueIO :: Natural -> IO (q a)
   readQueue  :: q a -> STM a
   writeQueue :: q a -> a -> STM ()
 
@@ -125,7 +126,7 @@ fibonacciRetryPolicy = fibonacciBackoff 100
 -- | Creates a new 'SupervisorSpec'. The reason it doesn't return a
 -- 'Supervisor' is to force you to call 'supervise' explicitly, in order to start the
 -- supervisor thread.
-newSupervisorSpec :: QueueLike q => RestartStrategy -> Int -> IO (SupervisorSpec0 q)
+newSupervisorSpec :: QueueLike q => RestartStrategy -> Natural -> IO (SupervisorSpec0 q)
 newSupervisorSpec strategy size = do
   tkn <- newTChanIO
   evt <- newQueueIO size

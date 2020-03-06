@@ -24,6 +24,7 @@ module Control.Concurrent.Supervisor.Bounded
 import Control.Concurrent.Supervisor.Types as T hiding (newSupervisor, newSupervisorSpec)
 import qualified Control.Concurrent.Supervisor.Types as Types
 import           Control.Concurrent.STM
+import           GHC.Natural
 
 type SupervisorSpec = Types.SupervisorSpec0 TBQueue
 type Supervisor = Types.Supervisor0 TBQueue
@@ -41,12 +42,12 @@ newSupervisorSpec strategy = Types.newSupervisorSpec strategy defaultEventQueueS
 --------------------------------------------------------------------------------
 -- | Like 'newSupervisorSpec', but give the user control over the size of the
 -- event queue.
-newSupervisorSpecBounded :: Types.RestartStrategy -> Int -> IO SupervisorSpec
+newSupervisorSpecBounded :: Types.RestartStrategy -> Natural -> IO SupervisorSpec
 newSupervisorSpecBounded = Types.newSupervisorSpec
 
 --------------------------------------------------------------------------------
 -- | The default size of the queue where `SupervisionEvent`(s) are written.
-defaultEventQueueSize :: Int
+defaultEventQueueSize :: Natural
 defaultEventQueueSize = 10000
 
 -- $supervise
